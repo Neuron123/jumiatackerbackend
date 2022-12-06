@@ -42,10 +42,10 @@ def login():
             })
 
 #check if product exists in database
-def check_product(product_url):
+def check_product(product_url, user):
     db = client["test"]
     collection = db["product"]
-    if collection.find_one({"url": product_url}) is None:
+    if collection.find_one({"url": product_url,"user":user}) is None:
         return False
     else:
         return True
@@ -75,7 +75,8 @@ def api():
         data = request.get_json()
         print(data)
         product_url = data['url']
-        if check_product(product_url):
+        user = data['user']
+        if check_product(product_url, user):
             print("Product already exists")
             return jsonify({'message': 'exists'})
         else:
@@ -98,4 +99,4 @@ def api():
         return jsonify({'message': 'error'})
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
